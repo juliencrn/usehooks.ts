@@ -1,5 +1,6 @@
 export * from './useBoolean'
 export * from './useClickAnyWhere'
+export * from './useCookie'
 export * from './useCopyToClipboard'
 export * from './useCountdown'
 export * from './useCounter'

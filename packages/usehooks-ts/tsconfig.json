@@ -9,7 +9,7 @@
     "strict": true,
     "lib": ["ESNEXT", "DOM", "DOM.Iterable"],
     // use global types for vite's expect, describe, etc.
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "@types/js-cookie"],
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "module": "ESNext",

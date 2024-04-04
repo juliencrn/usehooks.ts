@@ -57,6 +57,7 @@ function Component() {
 
 - [`useBoolean`](https://usehooks-ts.com/react-hook/use-boolean) — handles boolean state with useful utility functions.
 - [`useClickAnyWhere`](https://usehooks-ts.com/react-hook/use-click-any-where) — handles click events anywhere on the document.
+- [`useCookie`](https://usehooks-ts.com/react-hook/use-cookie) — manages cookie state in React components.
 - [`useCopyToClipboard`](https://usehooks-ts.com/react-hook/use-copy-to-clipboard) — copies text to the clipboard using the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API).
 - [`useCountdown`](https://usehooks-ts.com/react-hook/use-countdown) — manages countdown.
 - [`useCounter`](https://usehooks-ts.com/react-hook/use-counter) — manages a counter with increment, decrement, reset, and setCount functionalities.
