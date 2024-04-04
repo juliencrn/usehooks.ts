@@ -1,4 +1,3 @@
-import { useIsomorphicLayoutEffect } from '../useIsomorphicLayoutEffect'
 import { useLocalStorage } from '../useLocalStorage'
 import { useMediaQuery } from '../useMediaQuery'
 
@@ -66,13 +65,6 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
     defaultValue ?? isDarkOS ?? false,
     { initializeWithValue },
   )
-
-  // Update darkMode if os prefers changes
-  useIsomorphicLayoutEffect(() => {
-    if (isDarkOS !== isDarkMode) {
-      setDarkMode(isDarkOS)
-    }
-  }, [isDarkOS])
 
   return {
     isDarkMode,
