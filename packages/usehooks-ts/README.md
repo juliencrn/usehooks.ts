@@ -65,7 +65,7 @@ function Component() {
 - [`useDebounceValue`](https://usehooks-ts.com/react-hook/use-debounce-value) — returns a debounced version of the provided value, along with a function to update it.
 - [`useDocumentTitle`](https://usehooks-ts.com/react-hook/use-document-title) — sets the document title.
 - [`useEventCallback`](https://usehooks-ts.com/react-hook/use-event-callback) — creates a memoized event callback.
-- [`useEventListener`](https://usehooks-ts.com/react-hook/use-event-listener) — attaches event listeners to DOM elements, the window, or media query lists.
+- [`useEventListener`](https://usehooks-ts.com/react-hook/use-event-listener) — attaches event listeners to DOM elements, the window, screen orientation or media query lists.
 - [`useHover`](https://usehooks-ts.com/react-hook/use-hover) — tracks whether a DOM element is being hovered over.
 - [`useIntersectionObserver`](https://usehooks-ts.com/react-hook/use-intersection-observer) — tracks the intersection of a DOM element with its containing element or the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 - [`useInterval`](https://usehooks-ts.com/react-hook/use-interval) — creates an interval that invokes a callback function at a specified delay using the [setInterval API](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval).

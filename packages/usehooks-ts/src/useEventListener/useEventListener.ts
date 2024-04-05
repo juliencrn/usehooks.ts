@@ -43,15 +43,24 @@ function useEventListener<K extends keyof DocumentEventMap>(
   options?: boolean | AddEventListenerOptions,
 ): void
 
+// ScreenOrientation Event based useEventListener interface
+function useEventListener<K extends keyof ScreenOrientationEventMap>(
+  eventName: K,
+  handler: (event: ScreenOrientationEventMap[K]) => void,
+  element: RefObject<ScreenOrientation>,
+  options?: boolean | AddEventListenerOptions,
+): void
+
 /**
- * Custom hook that attaches event listeners to DOM elements, the window, or media query lists.
+ * Custom hook that attaches event listeners to DOM elements, the window, screen orientation or media query lists.
  * @template KW - The type of event for window events.
  * @template KH - The type of event for HTML or SVG element events.
  * @template KM - The type of event for media query list events.
+ * @template KS - The type of event for screen orientation events.
  * @template T - The type of the DOM element (default is `HTMLElement`).
- * @param {KW | KH | KM} eventName - The name of the event to listen for.
- * @param {(event: WindowEventMap[KW] | HTMLElementEventMap[KH] | SVGElementEventMap[KH] | MediaQueryListEventMap[KM] | Event) => void} handler - The event handler function.
- * @param {RefObject<T>} [element] - The DOM element or media query list to attach the event listener to (optional).
+ * @param {KW | KH | KM | KS} eventName - The name of the event to listen for.
+ * @param {(event: WindowEventMap[KW] | HTMLElementEventMap[KH] | MediaQueryListEventMap[KM] | ScreenOrientationEventMap[KS] | Event) => void} handler - The event handler function.
+ * @param {RefObject<T>} [element] - The DOM element, media query list or screen orientation to attach the event listener to (optional).
  * @param {boolean | AddEventListenerOptions} [options] - An options object that specifies characteristics about the event listener (optional).
  * @public
  * @see [Documentation](https://usehooks-ts.com/react-hook/use-event-listener)
@@ -77,15 +86,21 @@ function useEventListener<
   KW extends keyof WindowEventMap,
   KH extends keyof HTMLElementEventMap & keyof SVGElementEventMap,
   KM extends keyof MediaQueryListEventMap,
-  T extends HTMLElement | SVGAElement | MediaQueryList = HTMLElement,
+  KS extends keyof ScreenOrientationEventMap,
+  T extends
+    | HTMLElement
+    | SVGAElement
+    | MediaQueryList
+    | ScreenOrientation = HTMLElement,
 >(
-  eventName: KW | KH | KM,
+  eventName: KW | KH | KM | KS,
   handler: (
     event:
       | WindowEventMap[KW]
       | HTMLElementEventMap[KH]
       | SVGElementEventMap[KH]
       | MediaQueryListEventMap[KM]
+      | ScreenOrientationEventMap[KS]
       | Event,
   ) => void,
   element?: RefObject<T>,
