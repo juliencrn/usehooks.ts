@@ -101,6 +101,8 @@ module.exports = {
     // '@typescript-eslint/consistent-type-definitions': 'off', // Will come in v3
     '@typescript-eslint/no-unnecessary-condition': 'off', // TODO: Enable it
     '@typescript-eslint/prefer-ts-expect-error': 'off',
+    // Allow `then()` to be called on a promise but no `catch()` called
+    '@typescript-eslint/no-floating-promises': 'off',
   },
   overrides: [
     // Specials rules for testing

@@ -4,13 +4,13 @@ export default function Component() {
   const [copiedText, copy] = useCopyToClipboard()
 
   const handleCopy = (text: string) => () => {
-    copy(text)
-      .then(() => {
+    copy(text).then(success => {
+      if (success) {
         console.log('Copied!', { text })
-      })
-      .catch(error => {
-        console.error('Failed to copy!', error)
-      })
+      } else {
+        console.error('Failed to copy!')
+      }
+    })
   }
 
   return (
