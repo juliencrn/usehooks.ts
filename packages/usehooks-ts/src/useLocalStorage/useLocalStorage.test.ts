@@ -208,6 +208,22 @@ describe('useLocalStorage()', () => {
     expect(result.current[1] === originalCallback).toBe(true)
   })
 
+  it('setValue can be called in render phase', () => {
+    const { result } = renderHook(() => {
+      const [value, setValue] = useLocalStorage('count', 1)
+
+      // Adjust state with the recommended approach
+      // cf. https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+      if (value !== 2) {
+        setValue(2)
+      }
+
+      return value
+    })
+
+    expect(result.current).toBe(2)
+  })
+
   it('should use default JSON.stringify and JSON.parse when serializer/deserializer not provided', () => {
     const { result } = renderHook(() => useLocalStorage('key', 'initialValue'))
 

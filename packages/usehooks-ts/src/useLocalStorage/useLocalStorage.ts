@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 import type { Dispatch, SetStateAction } from 'react'
 
-import { useEventCallback } from '../useEventCallback'
 import { useEventListener } from '../useEventListener'
 
 declare global {
@@ -50,23 +49,29 @@ export function useLocalStorage<T>(
   initialValue: T | (() => T),
   options: UseLocalStorageOptions<T> = {},
 ): [T, Dispatch<SetStateAction<T>>, () => void] {
-  const { initializeWithValue = true } = options
+  const {
+    initializeWithValue = true,
+    // Destructure these options to help eslint react-hooks plugin analyse the
+    // `useCallback` dependencies
+    serializer: oSerializer,
+    deserializer: oDeserializer,
+  } = options
 
   const serializer = useCallback<(value: T) => string>(
     value => {
-      if (options.serializer) {
-        return options.serializer(value)
+      if (oSerializer) {
+        return oSerializer(value)
       }
 
       return JSON.stringify(value)
     },
-    [options],
+    [oSerializer],
   )
 
   const deserializer = useCallback<(value: string) => T>(
     value => {
-      if (options.deserializer) {
-        return options.deserializer(value)
+      if (oDeserializer) {
+        return oDeserializer(value)
       }
       // Support 'undefined' as a value
       if (value === 'undefined') {
@@ -86,7 +91,7 @@ export function useLocalStorage<T>(
 
       return parsed as T
     },
-    [options, initialValue],
+    [oDeserializer, initialValue],
   )
 
   // Get from local storage then
@@ -119,32 +124,35 @@ export function useLocalStorage<T>(
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue: Dispatch<SetStateAction<T>> = useEventCallback(value => {
-    // Prevent build error "window is undefined" but keeps working
-    if (IS_SERVER) {
-      console.warn(
-        `Tried setting localStorage key “${key}” even though environment is not a client`,
-      )
-    }
+  const setValue: Dispatch<SetStateAction<T>> = useCallback(
+    value => {
+      // Prevent build error "window is undefined" but keeps working
+      if (IS_SERVER) {
+        console.warn(
+          `Tried setting localStorage key “${key}” even though environment is not a client`,
+        )
+      }
 
-    try {
-      // Allow value to be a function so we have the same API as useState
-      const newValue = value instanceof Function ? value(readValue()) : value
+      try {
+        // Allow value to be a function so we have the same API as useState
+        const newValue = value instanceof Function ? value(readValue()) : value
 
-      // Save to local storage
-      window.localStorage.setItem(key, serializer(newValue))
+        // Save to local storage
+        window.localStorage.setItem(key, serializer(newValue))
 
-      // Save state
-      setStoredValue(newValue)
+        // Save state
+        setStoredValue(newValue)
 
-      // We dispatch a custom event so every similar useLocalStorage hook is notified
-      window.dispatchEvent(new StorageEvent('local-storage', { key }))
-    } catch (error) {
-      console.warn(`Error setting localStorage key “${key}”:`, error)
-    }
-  })
+        // We dispatch a custom event so every similar useLocalStorage hook is notified
+        window.dispatchEvent(new StorageEvent('local-storage', { key }))
+      } catch (error) {
+        console.warn(`Error setting localStorage key “${key}”:`, error)
+      }
+    },
+    [key, readValue, serializer],
+  )
 
-  const removeValue = useEventCallback(() => {
+  const removeValue = useCallback(() => {
     // Prevent build error "window is undefined" but keeps working
     if (IS_SERVER) {
       console.warn(
@@ -163,7 +171,7 @@ export function useLocalStorage<T>(
 
     // We dispatch a custom event so every similar useLocalStorage hook is notified
     window.dispatchEvent(new StorageEvent('local-storage', { key }))
-  })
+  }, [key, initialValue])
 
   useEffect(() => {
     setStoredValue(readValue())
