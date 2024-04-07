@@ -4,6 +4,14 @@ import type { RefObject } from 'react'
 
 import { useIsomorphicLayoutEffect } from '../useIsomorphicLayoutEffect/useIsomorphicLayoutEffect'
 
+// EventTarget-based useEventListener interface
+function useEventListener<K extends string>(
+  eventName: K,
+  handler: (event: Event) => void,
+  element: EventTarget,
+  options?: boolean | AddEventListenerOptions,
+): void
+
 // MediaQueryList Event based useEventListener interface
 function useEventListener<K extends keyof MediaQueryListEventMap>(
   eventName: K,
@@ -88,7 +96,7 @@ function useEventListener<
       | MediaQueryListEventMap[KM]
       | Event,
   ) => void,
-  element?: RefObject<T>,
+  element?: RefObject<T> | EventTarget,
   options?: boolean | AddEventListenerOptions,
 ) {
   // Create a ref that stores handler
@@ -100,7 +108,14 @@ function useEventListener<
 
   useEffect(() => {
     // Define the listening target
-    const targetElement: T | Window = element?.current ?? window
+    let targetElement: T | Window | EventTarget
+    if (element === undefined) {
+      targetElement = window
+    } else if ('current' in element) {
+      targetElement = element.current ?? window
+    } else {
+      targetElement = element
+    }
 
     if (!(targetElement && targetElement.addEventListener)) return
 

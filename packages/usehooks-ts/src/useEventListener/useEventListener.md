@@ -10,6 +10,8 @@ Find which kind of Event you want to extends:
 - `HTMLElementEventMap`
 - `DocumentEventMap`
 
+This hook also supports any implementation of the `EventTarget` interface, however this doesn't bring the same level of type-safety that the `*EventMap`s do.
+
 Then declare your custom event:
 
 ```ts

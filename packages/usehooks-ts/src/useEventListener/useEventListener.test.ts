@@ -38,6 +38,14 @@ const docRemoveEventListenerSpy = vitest.spyOn(
   'removeEventListener',
 )
 
+class TestTarget extends EventTarget {}
+const testTarget = new TestTarget()
+const targetAddEventListenerSpy = vitest.spyOn(testTarget, 'addEventListener')
+const targetRemoveEventListenerSpy = vitest.spyOn(
+  testTarget,
+  'removeEventListener',
+)
+
 describe('useEventListener()', () => {
   afterEach(() => {
     vitest.clearAllMocks()
@@ -86,6 +94,31 @@ describe('useEventListener()', () => {
     unmount()
 
     expect(refRemoveEventListenerSpy).toHaveBeenCalledWith(
+      eventName,
+      expect.any(Function),
+      options,
+    )
+  })
+
+  it('should bind/unbind the event listener to the EventTarget when EventTarget is provided', () => {
+    const eventName = 'test-event'
+    const handler = vitest.fn()
+    const options = undefined
+
+    const { unmount } = renderHook(() => {
+      useEventListener(eventName, handler, testTarget, options)
+    })
+
+    expect(targetAddEventListenerSpy).toHaveBeenCalledTimes(1)
+    expect(targetAddEventListenerSpy).toHaveBeenCalledWith(
+      eventName,
+      expect.any(Function),
+      options,
+    )
+
+    unmount()
+
+    expect(targetRemoveEventListenerSpy).toHaveBeenCalledWith(
       eventName,
       expect.any(Function),
       options,
