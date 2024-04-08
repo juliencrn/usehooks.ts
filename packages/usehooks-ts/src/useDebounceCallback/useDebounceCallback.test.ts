@@ -107,4 +107,27 @@ describe('useDebounceCallback()', () => {
     // The callback should be invoked immediately after flushing
     expect(debouncedCallback).toHaveBeenCalled()
   })
+
+  it('should have pending state', () => {
+    const delay = 500
+    const debouncedCallback = vitest.fn()
+    const { result } = renderHook(() =>
+      useDebounceCallback(debouncedCallback, delay),
+    )
+
+    act(() => {
+      result.current('argument')
+    })
+
+    // The callback must be pending before invoked
+    expect(debouncedCallback).not.toHaveBeenCalled()
+    expect(result.current.isPending()).toBe(true)
+
+    // Fast forward time
+    vitest.advanceTimersByTime(500)
+
+    // The callback must be not pending after invoked
+    expect(debouncedCallback).toHaveBeenCalled()
+    expect(result.current.isPending()).toBe(false)
+  })
 })
