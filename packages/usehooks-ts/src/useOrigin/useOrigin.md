@@ -1,0 +1,1 @@
+The useCurrentOrigin hook is a custom React hook designed to provide the origin (protocol, hostname, and port) of the current window location. This can be particularly useful in scenarios where real-time information is needed based on the user's context.
