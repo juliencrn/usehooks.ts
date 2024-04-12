@@ -101,7 +101,7 @@ export function useResizeObserver<T extends HTMLElement = HTMLElement>(
     return () => {
       observer.disconnect()
     }
-  }, [box, ref, isMounted])
+  }, [box, ref.current, isMounted])
 
   return { width, height }
 }
