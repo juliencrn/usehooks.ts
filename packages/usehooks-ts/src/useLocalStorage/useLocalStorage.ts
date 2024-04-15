@@ -26,6 +26,10 @@ type UseLocalStorageOptions<T> = {
    * @default true
    */
   initializeWithValue?: boolean
+  /**
+   * If `true`, the hook will initialize local storage value if it not exists.
+   */
+  setItemIfNotExists?: boolean
 }
 
 const IS_SERVER = typeof window === 'undefined'
@@ -166,6 +170,19 @@ export function useLocalStorage<T>(
   })
 
   useEffect(() => {
+    if (options.setItemIfNotExists) {
+      try {
+        const localStorageValue = window.localStorage.getItem(key)
+        if (localStorageValue === null) {
+          const initialValueToUse =
+            initialValue instanceof Function ? initialValue() : initialValue
+          window.localStorage.setItem(key, serializer(initialValueToUse))
+        }
+      } catch (error) {
+        console.warn(`Error initializing localStorage key “${key}”:`, error)
+      }
+    }
+
     setStoredValue(readValue())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key])

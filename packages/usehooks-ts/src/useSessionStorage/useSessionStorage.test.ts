@@ -248,4 +248,34 @@ describe('useSessionStorage()', () => {
 
     expect(sessionStorage.getItem('key')).toBe('42')
   })
+
+  it('should set session storage value to initial if not exists and `setItemIfNotExists` is true', () => {
+    const SESSION_STORAGE_KEY = 'key'
+    const INITIAL_VALUE = 'initial_value'
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY)).toBeNull()
+
+    renderHook(() =>
+      useSessionStorage(SESSION_STORAGE_KEY, INITIAL_VALUE, {
+        setItemIfNotExists: true,
+      }),
+    )
+
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY)).toBe(
+      JSON.stringify(INITIAL_VALUE),
+    )
+  })
+
+  it('should not set session storage value to initial if not exists and `setItemIfNotExists` is false', () => {
+    const SESSION_STORAGE_KEY = 'key'
+    const INITIAL_VALUE = 'initial_value'
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY)).toBeNull()
+
+    renderHook(() =>
+      useSessionStorage(SESSION_STORAGE_KEY, INITIAL_VALUE, {
+        setItemIfNotExists: false,
+      }),
+    )
+
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY)).toBeNull()
+  })
 })

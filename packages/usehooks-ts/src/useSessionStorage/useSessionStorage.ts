@@ -26,6 +26,10 @@ type UseSessionStorageOptions<T> = {
    * @default true
    */
   initializeWithValue?: boolean
+  /**
+   * If `true`, the hook will initialize session storage value if it not exists.
+   */
+  setItemIfNotExists?: boolean
 }
 
 const IS_SERVER = typeof window === 'undefined'
@@ -166,6 +170,19 @@ export function useSessionStorage<T>(
   })
 
   useEffect(() => {
+    if (options.setItemIfNotExists) {
+      try {
+        const sessionStorageValue = window.sessionStorage.getItem(key)
+        if (sessionStorageValue === null) {
+          const initialValueToUse =
+            initialValue instanceof Function ? initialValue() : initialValue
+          window.sessionStorage.setItem(key, serializer(initialValueToUse))
+        }
+      } catch (error) {
+        console.warn(`Error initializing sessionStorage key “${key}”:`, error)
+      }
+    }
+
     setStoredValue(readValue())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key])

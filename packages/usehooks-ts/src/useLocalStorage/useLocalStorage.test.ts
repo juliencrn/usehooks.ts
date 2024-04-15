@@ -257,4 +257,34 @@ describe('useLocalStorage()', () => {
 
     expect(localStorage.getItem('key')).toBe('42')
   })
+
+  it('should set local storage value to initial if not exists and `setItemIfNotExists` is true', () => {
+    const LOCAL_STORAGE_KEY = 'key'
+    const INITIAL_VALUE = 'initial_value'
+    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toBeNull()
+
+    renderHook(() =>
+      useLocalStorage(LOCAL_STORAGE_KEY, INITIAL_VALUE, {
+        setItemIfNotExists: true,
+      }),
+    )
+
+    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toBe(
+      JSON.stringify(INITIAL_VALUE),
+    )
+  })
+
+  it('should not set local storage value to initial if not exists and `setItemIfNotExists` is false', () => {
+    const LOCAL_STORAGE_KEY = 'key'
+    const INITIAL_VALUE = 'initial_value'
+    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toBeNull()
+
+    renderHook(() =>
+      useLocalStorage(LOCAL_STORAGE_KEY, INITIAL_VALUE, {
+        setItemIfNotExists: false,
+      }),
+    )
+
+    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toBeNull()
+  })
 })
