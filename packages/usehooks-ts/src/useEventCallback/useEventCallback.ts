@@ -22,7 +22,7 @@ export function useEventCallback<Args extends unknown[], R>(
 ): (...args: Args) => R
 export function useEventCallback<Args extends unknown[], R>(
   fn: ((...args: Args) => R) | undefined,
-): ((...args: Args) => R) | undefined
+): ((...args: Args) => R | undefined)
 export function useEventCallback<Args extends unknown[], R>(
   fn: ((...args: Args) => R) | undefined,
 ): ((...args: Args) => R) | undefined {
