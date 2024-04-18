@@ -21,7 +21,7 @@ type UseDocumentTitleOptions = {
  * ```
  */
 export function useDocumentTitle(
-  title: string,
+  title: string | undefined,
   options: UseDocumentTitleOptions = {},
 ): void {
   const { preserveTitleOnUnmount = true } = options
@@ -32,7 +32,7 @@ export function useDocumentTitle(
   }, [])
 
   useIsomorphicLayoutEffect(() => {
-    window.document.title = title
+    window.document.title = title ?? defaultTitle.current ?? ''
   }, [title])
 
   useUnmount(() => {

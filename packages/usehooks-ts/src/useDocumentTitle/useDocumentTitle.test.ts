@@ -29,4 +29,15 @@ describe('useDocumentTitle()', () => {
     unmount()
     expect(window.document.title).toEqual('updated')
   })
+
+  it('should unset title on provide `undefined` title', () => {
+    window.document.title = 'initial'
+    const { rerender } = renderHook(useDocumentTitle)
+    rerender('updated')
+    expect(window.document.title).toEqual('updated')
+    rerender('updated again')
+    expect(window.document.title).toEqual('updated again')
+    rerender(undefined)
+    expect(window.document.title).toEqual('initial')
+  })
 })
