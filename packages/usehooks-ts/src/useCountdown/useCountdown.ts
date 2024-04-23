@@ -25,6 +25,12 @@ type CountdownOptions = {
    * @default 0
    */
   countStop?: number
+
+  /**
+   * A callback function that will be called when the countdown stops (reaches `countStop`).
+   * @default undefiend
+   */
+  onStop?: Function
 }
 
 /** The countdown's controllers. */
@@ -57,6 +63,7 @@ export function useCountdown({
   countStop = 0,
   intervalMs = 1000,
   isIncrement = false,
+  onStop,
 }: CountdownOptions): [number, CountdownControllers] {
   const {
     count,
@@ -74,8 +81,16 @@ export function useCountdown({
   const {
     value: isCountdownRunning,
     setTrue: startCountdown,
-    setFalse: stopCountdown,
+    setFalse: stopCounter,
   } = useBoolean(false)
+
+  /**
+   * Will set running false and stop the countdown
+   */
+  const stopCountdown = () => {
+    stopCounter()
+    if (onStop) onStop()
+  }
 
   // Will set running false and reset the seconds to initial value.
   const resetCountdown = useCallback(() => {

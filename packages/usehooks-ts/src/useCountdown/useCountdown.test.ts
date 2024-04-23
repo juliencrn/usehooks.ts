@@ -181,4 +181,30 @@ describe('useCountdown()', () => {
     act(result.current[1].resetCountdown)
     expect(result.current[0]).toBe(60)
   })
+  it('should call onStop when countdown reaches the stop value', () => {
+    const onStopMock = vitest.fn()
+
+    const { result } = renderHook(() =>
+      useCountdown({
+        countStart: 3,
+        onStop: onStopMock,
+      }),
+    )
+
+    expect(result.current[0]).toBe(3)
+
+    act(result.current[1].startCountdown)
+
+    act(() => {
+      vitest.advanceTimersByTime(3000)
+    })
+
+    expect(result.current[0]).toBe(0)
+
+    act(() => {
+      vitest.advanceTimersByTime(1 * 1000)
+    })
+
+    expect(onStopMock).toHaveBeenCalledTimes(1)
+  })
 })
