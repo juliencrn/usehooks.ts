@@ -55,6 +55,7 @@ function Component() {
 
 <!-- HOOKS:START -->
 
+- [`useArray`](https://usehooks-ts.com/react-hook/use-array) — handles Array state with useful utility functions.
 - [`useBoolean`](https://usehooks-ts.com/react-hook/use-boolean) — handles boolean state with useful utility functions.
 - [`useClickAnyWhere`](https://usehooks-ts.com/react-hook/use-click-any-where) — handles click events anywhere on the document.
 - [`useCopyToClipboard`](https://usehooks-ts.com/react-hook/use-copy-to-clipboard) — copies text to the clipboard using the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API).

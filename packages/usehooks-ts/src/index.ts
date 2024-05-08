@@ -1,3 +1,4 @@
+export * from './useArray'
 export * from './useBoolean'
 export * from './useClickAnyWhere'
 export * from './useCopyToClipboard'
