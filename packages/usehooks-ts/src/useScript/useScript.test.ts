@@ -80,4 +80,23 @@ describe('useScript', () => {
     expect(document.querySelector(`script[id="${id}"]`)).not.toBeNull()
     expect(document.querySelector(`script[src="${src}"]`)?.id).toBe(id)
   })
+
+  it('should have a `crossOrigin` attribute when given', () => {
+    const src = '/'
+    const crossOrigin = 'anonymous'
+
+    const { result } = renderHook(() => useScript(src, { crossOrigin }))
+
+    // Make sure the document is loaded
+    act(() => {
+      document
+        .querySelector(`script[src="${src}"]`)
+        ?.dispatchEvent(new Event('load'))
+    })
+
+    expect(result.current).toBe('ready')
+
+    expect(document.querySelector(`script[crossOrigin="${crossOrigin}"]`)).not.toBeNull()
+    expect(document.querySelector(`script[src="${src}"]`)?.crossOrigin).toBe(crossOrigin)
+  })
 })

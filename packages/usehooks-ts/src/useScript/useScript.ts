@@ -11,6 +11,8 @@ type UseScriptOptions = {
   removeOnUnmount?: boolean
   /** Script's `id` (optional). */
   id?: string
+  /** Script's `crossOrigin` (optional). https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin */
+  crossOrigin?: 'anonymous' | 'use-credentials' | '' | null
 }
 
 // Cached script statuses
@@ -92,6 +94,9 @@ export function useScript(
       if (options?.id) {
         scriptNode.id = options.id
       }
+      if (options?.crossOrigin) {
+        scriptNode.crossOrigin = options.crossOrigin;
+      }
       scriptNode.setAttribute('data-status', 'loading')
       document.body.appendChild(scriptNode)
 
@@ -136,7 +141,7 @@ export function useScript(
         cachedScriptStatuses.delete(src)
       }
     }
-  }, [src, options?.shouldPreventLoad, options?.removeOnUnmount, options?.id])
+  }, [src, options?.shouldPreventLoad, options?.removeOnUnmount, options?.id, options?.crossOrigin])
 
   return status
 }

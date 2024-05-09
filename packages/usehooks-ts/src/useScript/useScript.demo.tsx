@@ -11,6 +11,7 @@ export default function Component() {
   const status = useScript(`https://code.jquery.com/jquery-3.5.1.min.js`, {
     removeOnUnmount: false,
     id: 'jquery',
+    crossOrigin: 'anonymous',
   })
 
   useEffect(() => {
