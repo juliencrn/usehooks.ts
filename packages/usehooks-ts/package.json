@@ -39,7 +39,7 @@
   "devDependencies": {
     "@juggle/resize-observer": "^3.4.0",
     "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
+    "@testing-library/react": "^16.0.0",
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.11.19",
     "@types/react": "18.2.73",
