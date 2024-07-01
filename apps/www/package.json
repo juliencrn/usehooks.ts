@@ -32,7 +32,7 @@
     "react-dom": "18.2.0",
     "react-instantsearch": "^7.6.0",
     "rehype-prism-plus": "^2.0.0",
-    "remark-gfm": "^3.0.1",
+    "remark-gfm": "^4.0.0",
     "schema-dts": "^1.1.2",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "3.4.3",
