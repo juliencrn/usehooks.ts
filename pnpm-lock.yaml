@@ -48,8 +48,8 @@ importers:
         specifier: ^0.25.9
         version: 0.25.9(typescript@5.3.3)
       typedoc-plugin-markdown:
-        specifier: ^3.17.1
-        version: 3.17.1(typedoc@0.25.9)
+        specifier: ^4.0.0
+        version: 4.1.1(typedoc@0.25.9)
       typedoc-plugin-mdn-links:
         specifier: ^3.1.17
         version: 3.1.17(typedoc@0.25.9)
@@ -8404,12 +8404,12 @@ packages:
       is-typed-array: 1.1.13
     dev: true
 
-  /typedoc-plugin-markdown@3.17.1(typedoc@0.25.9):
-    resolution: {integrity: sha512-QzdU3fj0Kzw2XSdoL15ExLASt2WPqD7FbLeaqwT70+XjKyTshBnUlQA5nNREO1C2P8Uen0CDjsBLMsCQ+zd0lw==}
+  /typedoc-plugin-markdown@4.1.1(typedoc@0.25.9):
+    resolution: {integrity: sha512-ZQv8FXn1TBZAvhWMgOL8hE472rwv1dzSr/KIIUGPmdNXybeS6jmK7d1OwKhorLuGbPDQGl6U97BwfkFTcydAkw==}
+    engines: {node: '>= 18'}
     peerDependencies:
-      typedoc: '>=0.24.0'
+      typedoc: 0.26.x
     dependencies:
-      handlebars: 4.7.8
       typedoc: 0.25.9(typescript@5.3.3)
     dev: true
 

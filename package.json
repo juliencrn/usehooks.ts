@@ -44,7 +44,7 @@
     "rimraf": "^5.0.5",
     "turbo": "^1.12.4",
     "typedoc": "^0.25.9",
-    "typedoc-plugin-markdown": "^3.17.1",
+    "typedoc-plugin-markdown": "^4.0.0",
     "typedoc-plugin-mdn-links": "^3.1.17",
     "typedoc-plugin-missing-exports": "^2.2.0",
     "zod": "3.22.4",
