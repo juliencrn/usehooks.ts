@@ -60,6 +60,17 @@ Here is a quick guide to doing code contributions to the library.
    ```shellscript
    git checkout -b your-meaningful-branch-name
    ```
+   ## Or to create and switch to the branch using git switch
+   
+   ```shellscript
+   git switch -c your-meaningful-branch-name
+   ```
+      
+   ## Or if you want to switch to an existing branch
+
+  ```shellscript
+   git switch your-existing-branch-name
+   ```
 
 4. Install packages by running:
 
