@@ -23,6 +23,7 @@ type SetStepCallbackType = (step: number | ((step: number) => number)) => void
 /**
  * Custom hook that manages and navigates between steps in a multi-step process.
  * @param {number} maxStep - The maximum step in the process.
+ * @param {number} initialStep - The initial step.
  * @returns {[number, UseStepActions]} An tuple containing the current step and helper functions for navigating steps.
  * @public
  * @see [Documentation](https://usehooks-ts.com/react-hook/use-step)
@@ -32,8 +33,12 @@ type SetStepCallbackType = (step: number | ((step: number) => number)) => void
  * // Access and use the current step and provided helper functions.
  * ```
  */
-export function useStep(maxStep: number): [number, UseStepActions] {
-  const [currentStep, setCurrentStep] = useState(1)
+export function useStep(maxStep: number, initialStep: number = 1): [number, UseStepActions] {
+  if (initialStep < 1 || initialStep > maxStep) {
+    throw new Error(`initialStep must be in range 1 - ${maxStep}`)
+  }
+
+  const [currentStep, setCurrentStep] = useState(initialStep)
 
   const canGoToNextStep = currentStep + 1 <= maxStep
   const canGoToPrevStep = currentStep - 1 > 0
