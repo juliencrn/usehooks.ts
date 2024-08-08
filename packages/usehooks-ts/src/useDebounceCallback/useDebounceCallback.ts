@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 
 import debounce from 'lodash.debounce'
-
-import { useUnmount } from '../useUnmount'
 
 /** Configuration options for controlling the behavior of the debounced function. */
 type DebounceOptions = {
@@ -76,40 +74,44 @@ export function useDebounceCallback<T extends (...args: any) => ReturnType<T>>(
   delay = 500,
   options?: DebounceOptions,
 ): DebouncedState<T> {
-  const debouncedFunc = useRef<ReturnType<typeof debounce>>()
+  const isPendingRef = useRef(false)
 
-  useUnmount(() => {
-    if (debouncedFunc.current) {
-      debouncedFunc.current.cancel()
-    }
-  })
-
-  const debounced = useMemo(() => {
-    const debouncedFuncInstance = debounce(func, delay, options)
+  return useMemo(() => {
+    const debouncedFunc = debounce(
+      (...args: Parameters<T>) => {
+        try {
+          return func(...args)
+        } finally {
+          // Whenever execution of the debounced function has finished, it's execution is not pending anymore,
+          // even in case of errors.
+          isPendingRef.current = false
+        }
+      },
+      delay,
+      options,
+    )
 
     const wrappedFunc: DebouncedState<T> = (...args: Parameters<T>) => {
-      return debouncedFuncInstance(...args)
+      // This code will be executed whenever the client/caller invokes the debounced method,
+      // so now is the right time to set isPending to true.
+      isPendingRef.current = true
+      return debouncedFunc(...args)
     }
 
     wrappedFunc.cancel = () => {
-      debouncedFuncInstance.cancel()
+      isPendingRef.current = false
+      debouncedFunc.cancel()
     }
 
     wrappedFunc.isPending = () => {
-      return !!debouncedFunc.current
+      return isPendingRef.current
     }
 
     wrappedFunc.flush = () => {
-      return debouncedFuncInstance.flush()
+      isPendingRef.current = false
+      return debouncedFunc.flush()
     }
 
     return wrappedFunc
   }, [func, delay, options])
-
-  // Update the debounced function ref whenever func, wait, or options change
-  useEffect(() => {
-    debouncedFunc.current = debounce(func, delay, options)
-  }, [func, delay, options])
-
-  return debounced
 }

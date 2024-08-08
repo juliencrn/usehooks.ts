@@ -107,4 +107,69 @@ describe('useDebounceCallback()', () => {
     // The callback should be invoked immediately after flushing
     expect(debouncedCallback).toHaveBeenCalled()
   })
+
+   it('should update isPending on invocations', () => {
+    const delay = 100
+    const callback = vitest.fn()
+    const { result } = renderHook(() => useDebounceCallback(callback, delay))
+
+    act(() => {
+      result.current('test1')
+      result.current('test2')
+    })
+
+    expect(result.current.isPending()).toBeTruthy()
+
+    // Fast-forward time
+    vitest.advanceTimersByTime(200)
+
+    expect(result.current.isPending()).toBeFalsy()
+  })
+
+  it('should update isPending on invocations even if callback errors out', () => {
+    const delay = 100
+    const errorMessage =
+      'Mock implementation throws error for testing purposes.'
+    const callback = vitest.fn().mockImplementation(() => {
+      throw new Error(errorMessage)
+    })
+    const { result } = renderHook(() => useDebounceCallback(callback, delay))
+
+    act(() => {
+      result.current('test1')
+      result.current('test2')
+    })
+
+    expect(result.current.isPending()).toBeTruthy()
+
+    // Forwarding time will invoke the debounced mock function which throws an error.
+    expect(() => vitest.advanceTimersByTime(200)).toThrowError(errorMessage)
+
+    // Even though the mock implementation threw an error, isPending should still be updated to false.
+    expect(result.current.isPending()).toBeFalsy()
+  })
+
+  it('should invoke debounced callback even after unmount', () => {
+    const delay = 100
+    const debouncedCallback = vitest.fn()
+    const { result, unmount } = renderHook(() =>
+      useDebounceCallback(debouncedCallback, delay),
+    )
+
+    act(() => {
+      result.current('argument')
+      unmount()
+    })
+
+    // We expect our invocation to still be pending even though the component has already been unmounted.
+    expect(result.current.isPending()).toBeTruthy()
+    expect(debouncedCallback).not.toHaveBeenCalled()
+
+    // Fast-forward time
+    vitest.advanceTimersByTime(200)
+
+    // Now, long after the component was unmounted, we expect the debounced callback to eventually been called.
+    expect(result.current.isPending()).toBe(false)
+    expect(debouncedCallback).toHaveBeenCalled()
+  })
 })
