@@ -84,6 +84,7 @@ function Component() {
 - [`useSessionStorage`](https://usehooks-ts.com/react-hook/use-session-storage) — uses the [sessionStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) to persist state across page reloads.
 - [`useStep`](https://usehooks-ts.com/react-hook/use-step) — manages and navigates between steps in a multi-step process.
 - [`useTernaryDarkMode`](https://usehooks-ts.com/react-hook/use-ternary-dark-mode) — manages ternary (system, dark, light) dark mode with local storage support.
+- [`useThrottle`](https://usehooks-ts.com/react-hook/use-throttle) — A custom hook that support throttle.
 - [`useTimeout`](https://usehooks-ts.com/react-hook/use-timeout) — handles timeouts in React components using the [setTimeout API](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout).
 - [`useToggle`](https://usehooks-ts.com/react-hook/use-toggle) — manages a boolean toggle state in React components.
 - [`useUnmount`](https://usehooks-ts.com/react-hook/use-unmount) — runs a cleanup function when the component is unmounted.
