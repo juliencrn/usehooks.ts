@@ -128,8 +128,16 @@ export function useLocalStorage<T>(
     }
 
     try {
+      // Read the old value to compare with the new
+      const oldValue = readValue();
+
       // Allow value to be a function so we have the same API as useState
-      const newValue = value instanceof Function ? value(readValue()) : value
+      const newValue = value instanceof Function ? value(oldValue) : value
+
+      // Check if the new value is equal to old and if so, cancel update
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
 
       // Save to local storage
       window.localStorage.setItem(key, serializer(newValue))
