@@ -1,3 +1,4 @@
+import { useIsMounted } from '../useIsMounted'
 import { useIsomorphicLayoutEffect } from '../useIsomorphicLayoutEffect'
 import { useLocalStorage } from '../useLocalStorage'
 import { useMediaQuery } from '../useMediaQuery'
@@ -68,8 +69,9 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
   )
 
   // Update darkMode if os prefers changes
+  const allowDarkOSChange = useIsMounted()
   useIsomorphicLayoutEffect(() => {
-    if (isDarkOS !== isDarkMode) {
+    if (allowDarkOSChange() && isDarkOS !== isDarkMode) {
       setDarkMode(isDarkOS)
     }
   }, [isDarkOS])

@@ -124,4 +124,29 @@ describe('useDarkMode()', () => {
 
     expect(result.current.isDarkMode).toBe(false)
   })
+
+  it('should update dark mode when OS preference changes', () => {
+    const { updateMatches } = mockMatchMedia(false)
+    const { result, rerender } = renderHook(() => useDarkMode())
+    expect(result.current.isDarkMode).toBe(false)
+    updateMatches(true)
+    rerender() // trigger `useIsomorphicLayoutEffect`
+    expect(result.current.isDarkMode).toBe(true)
+  })
+
+  it('should prioritize localStorage value over OS dark mode on page load', () => {
+    window.localStorage.setItem('custom-key', JSON.stringify(false))
+
+    mockMatchMedia(true)
+    const { result } = renderHook(() =>
+      useDarkMode({ localStorageKey: 'custom-key', initializeWithValue: true }),
+    )
+    expect(result.current.isDarkMode).toBe(false)
+
+    act(() => {
+      result.current.toggle()
+    })
+    expect(result.current.isDarkMode).toBe(true)
+    expect(window.localStorage.getItem('custom-key')).toBe(JSON.stringify(true))
+  })
 })
