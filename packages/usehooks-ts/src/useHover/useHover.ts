@@ -18,7 +18,7 @@ import { useEventListener } from '../useEventListener'
  * // Access the isHovered variable to determine if the button is being hovered over.
  * ```
  */
-export function useHover<T extends HTMLElement = HTMLElement>(
+export function useHover<T extends HTMLElement | SVGElement = HTMLElement>(
   elementRef: RefObject<T>,
 ): boolean {
   const [value, setValue] = useState<boolean>(false)

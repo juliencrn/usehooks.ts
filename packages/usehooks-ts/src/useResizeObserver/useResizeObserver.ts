@@ -13,7 +13,9 @@ type Size = {
 }
 
 /** The options for the ResizeObserver. */
-type UseResizeObserverOptions<T extends HTMLElement = HTMLElement> = {
+type UseResizeObserverOptions<
+  T extends HTMLElement | SVGElement = HTMLElement,
+> = {
   /** The ref of the element to observe. */
   ref: RefObject<T>
   /**
@@ -51,9 +53,9 @@ const initialSize: Size = {
  * <div ref={myRef}>Hello, world!</div>
  * ```
  */
-export function useResizeObserver<T extends HTMLElement = HTMLElement>(
-  options: UseResizeObserverOptions<T>,
-): Size {
+export function useResizeObserver<
+  T extends HTMLElement | SVGElement = HTMLElement,
+>(options: UseResizeObserverOptions<T>): Size {
   const { ref, box = 'content-box' } = options
   const [{ width, height }, setSize] = useState<Size>(initialSize)
   const isMounted = useIsMounted()

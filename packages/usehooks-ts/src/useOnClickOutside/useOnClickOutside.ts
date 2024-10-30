@@ -29,7 +29,9 @@ type EventType =
  * });
  * ```
  */
-export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
+export function useOnClickOutside<
+  T extends HTMLElement | SVGElement = HTMLElement,
+>(
   ref: RefObject<T> | RefObject<T>[],
   handler: (event: MouseEvent | TouchEvent | FocusEvent) => void,
   eventType: EventType = 'mousedown',
