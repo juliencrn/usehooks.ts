@@ -75,6 +75,7 @@ function Component() {
 - [`useLocalStorage`](https://usehooks-ts.com/react-hook/use-local-storage) — uses the [localStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to persist state across page reloads.
 - [`useMap`](https://usehooks-ts.com/react-hook/use-map) — manages a key-value [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) state with setter actions.
 - [`useMediaQuery`](https://usehooks-ts.com/react-hook/use-media-query) — tracks the state of a media query using the [Match Media API](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia).
+- [`useNetworkStatus`](https://usehooks-ts.com/react-hook/use-network-status) — Custom hook to tracks the user's network status.
 - [`useOnClickOutside`](https://usehooks-ts.com/react-hook/use-on-click-outside) — handles clicks outside a specified element.
 - [`useReadLocalStorage`](https://usehooks-ts.com/react-hook/use-read-local-storage) — reads a value from [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), closely related to [useLocalStorage()](https://usehooks-ts.com/react-hook/use-local-storage).
 - [`useResizeObserver`](https://usehooks-ts.com/react-hook/use-resize-observer) — observes the size of an element using the [ResizeObserver API](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
