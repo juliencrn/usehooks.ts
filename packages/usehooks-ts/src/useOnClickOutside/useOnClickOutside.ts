@@ -55,7 +55,6 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
         handler(event)
       }
     },
-    undefined,
-    eventListenerOptions,
+    { options: eventListenerOptions },
   )
 }

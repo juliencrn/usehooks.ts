@@ -4,55 +4,64 @@ import type { RefObject } from 'react'
 
 import { useIsomorphicLayoutEffect } from '../useIsomorphicLayoutEffect/useIsomorphicLayoutEffect'
 
-// MediaQueryList Event based useEventListener interface
-function useEventListener<K extends keyof MediaQueryListEventMap>(
-  eventName: K,
-  handler: (event: MediaQueryListEventMap[K]) => void,
-  element: RefObject<MediaQueryList>,
-  options?: boolean | AddEventListenerOptions,
-): void
+// Recommended usage: move CustomEventMap to global declaration
+/** Extends EventMap declarations for all DOM Elements (intersection)*/
+interface CustomEventMap {
+  'your-custom-event': CustomEvent<{ isCustom: boolean }>
+}
 
-// Window Event based useEventListener interface
-function useEventListener<K extends keyof WindowEventMap>(
-  eventName: K,
-  handler: (event: WindowEventMap[K]) => void,
-  element?: undefined,
-  options?: boolean | AddEventListenerOptions,
-): void
+/** Element as string to Matching EventMap */
+type ElementToEventMap = {
+  Window: [Window, WindowEventMap]
+  HTMLElement: [HTMLElement, HTMLElementEventMap]
+  Document: [Document, DocumentEventMap]
+  //
+  // EventTargets
+  TextTrack: [TextTrack, TextTrackEventMap]
+  BaseAudioContext: [BaseAudioContext, BaseAudioContextEventMap]
+  BroadcastChannel: [BroadcastChannel, BroadcastChannelEventMap]
+  FileReader: [FileReader, FileReaderEventMap]
+  HTMLMediaElement: [HTMLMediaElement, HTMLMediaElementEventMap]
+  MediaQueryList: [MediaQueryList, MediaQueryListEventMap]
+  Notification: [Notification, NotificationEventMap]
+  //
+  // ... add more elements here
+  //
+  RTCDataChannel: [RTCDataChannel, RTCDataChannelEventMap]
+  RTCPeerConnection: [RTCPeerConnection, RTCPeerConnectionEventMap]
+  SpeechSynthesis: [SpeechSynthesis, SpeechSynthesisEventMap]
+  SpeechSynthesisUtterance: [SpeechSynthesisUtterance, SpeechSynthesisUtteranceEventMap]
+  WebSocket: [WebSocket, WebSocketEventMap]
+  XMLHttpRequest: [XMLHttpRequest, XMLHttpRequestEventMap]
+  //
+  // Audio Nodes
+  AudioScheduledSourceNode: [AudioScheduledSourceNode, AudioScheduledSourceNodeEventMap]
+  AudioWorkletNode: [AudioWorkletNode, AudioWorkletNodeEventMap]
+  //
+  // ... add more elements here
+}
+/** If A exists Return B else C  */
+type ifGen<A, B, C> = [A] extends [undefined | never] ? C : B;
 
-// Element Event based useEventListener interface
-function useEventListener<
-  K extends keyof HTMLElementEventMap & keyof SVGElementEventMap,
-  T extends Element = K extends keyof HTMLElementEventMap
-    ? HTMLDivElement
-    : SVGElement,
->(
-  eventName: K,
-  handler:
-    | ((event: HTMLElementEventMap[K]) => void)
-    | ((event: SVGElementEventMap[K]) => void),
-  element: RefObject<T>,
-  options?: boolean | AddEventListenerOptions,
-): void
+/** Return `T` if `M` undefined or never */
+type Fallback<M, T> = ifGen<M, M, T>
 
-// Document Event based useEventListener interface
-function useEventListener<K extends keyof DocumentEventMap>(
-  eventName: K,
-  handler: (event: DocumentEventMap[K]) => void,
-  element: RefObject<Document>,
-  options?: boolean | AddEventListenerOptions,
-): void
+/** Return `EventMap` type of matching element ref (from config argument)
+ *  Intersected with `CustomEventMap` (from global declaration)
+ *  If Element not in map default Fallback to HTMLElement */
+type EventMapOf<E> = Fallback<{
+  [K in keyof ElementToEventMap]: E extends ElementToEventMap[K][0] ? ElementToEventMap[K][1] & CustomEventMap : never
+  }[keyof ElementToEventMap], HTMLElement>
 
 /**
  * Custom hook that attaches event listeners to DOM elements, the window, or media query lists.
- * @template KW - The type of event for window events.
- * @template KH - The type of event for HTML or SVG element events.
- * @template KM - The type of event for media query list events.
- * @template T - The type of the DOM element (default is `HTMLElement`).
- * @param {KW | KH | KM} eventName - The name of the event to listen for.
- * @param {(event: WindowEventMap[KW] | HTMLElementEventMap[KH] | SVGElementEventMap[KH] | MediaQueryListEventMap[KM] | Event) => void} handler - The event handler function.
- * @param {RefObject<T>} [element] - The DOM element or media query list to attach the event listener to (optional).
- * @param {boolean | AddEventListenerOptions} [options] - An options object that specifies characteristics about the event listener (optional).
+ * @template M - The type of custom Event Map (optional generic), overrides any other element to events mapping.
+ * @template E - The type of the DOM element (default is `Window`).
+ * @template K - The type of event name, Key of an EventMap (match for DOM element).
+ * @param {K} eventName - The name of the event to listen for.
+ * @param {(event: Fallback<M, EventMapOf<E>>[K]) => void} handler - The event handler function.
+ * @param {RefObject<T>} config.element - A reference that specifies the DOM element to attach the event listener to.
+ * @param {boolean | AddEventListenerOptions} config.options - Event listener Options.
  * @public
  * @see [Documentation](https://usehooks-ts.com/react-hook/use-event-listener)
  * @example
@@ -63,33 +72,33 @@ function useEventListener<K extends keyof DocumentEventMap>(
  * @example
  * ```tsx
  * // Example 2: Attach a document event listener with options
- * const elementRef = useRef(document);
- * useEventListener('click', handleClick, elementRef, { capture: true });
+ * const element = useRef(document);
+ * useEventListener('click', handleClick, { element, options: { capture: true } });
  * ```
  * @example
  * ```tsx
  * // Example 3: Attach an element event listener
- * const buttonRef = useRef<HTMLButtonElement>(null);
- * useEventListener('click', handleButtonClick, buttonRef);
+ * const element = useRef<HTMLButtonElement>(null);
+ * useEventListener('click', handleButtonClick, { element });
  * ```
  */
 function useEventListener<
-  KW extends keyof WindowEventMap,
-  KH extends keyof HTMLElementEventMap & keyof SVGElementEventMap,
-  KM extends keyof MediaQueryListEventMap,
-  T extends HTMLElement | SVGAElement | MediaQueryList = HTMLElement,
+  /** Custom Event Map (optional generic)*/
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  M extends Record<string, any> | undefined = undefined,
+  /** Element Type of Optional refObject (defaults to Window) */
+  E extends ifGen<M, any, ElementToEventMap[keyof ElementToEventMap][0]> = ifGen<M, any, Window>,
+  /** eventName Key of type custom EventMap if present */
+  K extends keyof Fallback<M, EventMapOf<E>> = keyof Fallback<M, EventMapOf<E>>,
 >(
-  eventName: KW | KH | KM,
-  handler: (
-    event:
-      | WindowEventMap[KW]
-      | HTMLElementEventMap[KH]
-      | SVGElementEventMap[KH]
-      | MediaQueryListEventMap[KM]
-      | Event,
-  ) => void,
-  element?: RefObject<T>,
-  options?: boolean | AddEventListenerOptions,
+  eventName: K & string,
+  handler: (event: Fallback<M, EventMapOf<E>>[K]) => void,
+  config: {
+    /** Litening Target (defaults to window) (supports, ref or plain Element) */
+    element?: RefObject<E> | E
+    /** eventListener Options */
+    options?: boolean | AddEventListenerOptions
+  } = {},
 ) {
   // Create a ref that stores handler
   const savedHandler = useRef(handler)
@@ -100,22 +109,20 @@ function useEventListener<
 
   useEffect(() => {
     // Define the listening target
-    const targetElement: T | Window = element?.current ?? window
+    const targetElement: E | Window = config.element ? 'current' in config.element ? config.element.current ?? window : config.element : window
 
     if (!(targetElement && targetElement.addEventListener)) return
 
     // Create event listener that calls handler function stored in ref
-    const listener: typeof handler = event => {
-      savedHandler.current(event)
-    }
+    const listener: EventListener = event => savedHandler.current(event as Parameters<typeof handler>[0])
 
-    targetElement.addEventListener(eventName, listener, options)
+    targetElement.addEventListener(eventName, listener, config.options)
 
     // Remove event listener on cleanup
     return () => {
-      targetElement.removeEventListener(eventName, listener, options)
+      targetElement.removeEventListener(eventName, listener, config.options)
     }
-  }, [eventName, element, options])
+  }, [eventName, config])
 }
 
 export { useEventListener }

@@ -19,6 +19,11 @@ declare global {
   interface DocumentEventMap {
     'test-event': CustomEvent
   }
+
+  /** Since TestTarget not at ElementsToEventMap, we need to use an EventMap generic override */
+  interface TestTargetEventMap {
+    'boundary': SpeechSynthesisEvent
+  }
 }
 
 const windowAddEventListenerSpy = vitest.spyOn(window, 'addEventListener')
@@ -35,6 +40,14 @@ const docRef = { current: window.document }
 const docAddEventListenerSpy = vitest.spyOn(docRef.current, 'addEventListener')
 const docRemoveEventListenerSpy = vitest.spyOn(
   docRef.current,
+  'removeEventListener',
+)
+
+class TestTarget extends EventTarget {}
+const testTarget = new TestTarget()
+const targetAddEventListenerSpy = vitest.spyOn(testTarget, 'addEventListener')
+const targetRemoveEventListenerSpy = vitest.spyOn(
+  testTarget,
   'removeEventListener',
 )
 
@@ -73,7 +86,7 @@ describe('useEventListener()', () => {
     const options = undefined
 
     const { unmount } = renderHook(() => {
-      useEventListener(eventName, handler, ref, options)
+      useEventListener(eventName, handler, { element: ref, options })
     })
 
     expect(refAddEventListenerSpy).toHaveBeenCalledTimes(1)
@@ -92,13 +105,38 @@ describe('useEventListener()', () => {
     )
   })
 
+  it('should bind/unbind the event listener to the EventTarget when EventTarget is provided', () => {
+    const eventName = 'boundary'
+    const handler = vitest.fn()
+    const options = undefined
+
+    const { unmount } = renderHook(() => {
+      useEventListener<TestTargetEventMap>("boundary", handler, { element: testTarget, options })
+    })
+
+    expect(targetAddEventListenerSpy).toHaveBeenCalledTimes(1)
+    expect(targetAddEventListenerSpy).toHaveBeenCalledWith(
+      eventName,
+      expect.any(Function),
+      options,
+    )
+
+    unmount()
+
+    expect(targetRemoveEventListenerSpy).toHaveBeenCalledWith(
+      eventName,
+      expect.any(Function),
+      options,
+    )
+  })
+
   it('should bind/unbind the event listener to the document when document is provided', () => {
     const eventName = 'test-event'
     const handler = vitest.fn()
     const options = undefined
 
     const { unmount } = renderHook(() => {
-      useEventListener(eventName, handler, docRef, options)
+      useEventListener(eventName, handler, { element: docRef, options })
     })
 
     expect(docAddEventListenerSpy).toHaveBeenCalledTimes(1)
@@ -127,7 +165,7 @@ describe('useEventListener()', () => {
     }
 
     renderHook(() => {
-      useEventListener(eventName, handler, undefined, options)
+      useEventListener(eventName, handler, { options })
     })
 
     expect(windowAddEventListenerSpy).toHaveBeenCalledWith(
@@ -142,7 +180,7 @@ describe('useEventListener()', () => {
     const handler = vitest.fn()
 
     renderHook(() => {
-      useEventListener(eventName, handler, ref)
+      useEventListener(eventName, handler, { element: ref })
     })
 
     fireEvent.click(ref.current)
@@ -155,10 +193,10 @@ describe('useEventListener()', () => {
     const keydownHandler = vitest.fn()
 
     renderHook(() => {
-      useEventListener('click', clickHandler, ref)
+      useEventListener('click', clickHandler, { element: ref })
     })
     renderHook(() => {
-      useEventListener('keydown', keydownHandler, ref)
+      useEventListener('keydown', keydownHandler, { element: ref })
     })
 
     fireEvent.click(ref.current)
