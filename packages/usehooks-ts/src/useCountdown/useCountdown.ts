@@ -45,11 +45,12 @@ type CountdownControllers = {
  * @see [Documentation](https://usehooks-ts.com/react-hook/use-countdown)
  * @example
  * ```tsx
- * const [counter, { start, stop, reset }] = useCountdown({
- *   countStart: 10,
- *   intervalMs: 1000,
- *   isIncrement: false,
- * });
+ * const [counter, { startCountdown, stopCountdown, resetCountdown }] =
+ *   useCountdown({useCountdown({
+ *    countStart: 10,
+ *    intervalMs: 1000,
+ *    isIncrement: false,
+ *  });
  * ```
  */
 export function useCountdown({
