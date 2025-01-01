@@ -31,3 +31,5 @@ export * from './useTimeout'
 export * from './useToggle'
 export * from './useUnmount'
 export * from './useWindowSize'
+
+export * from './useEscclose'
