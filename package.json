@@ -28,9 +28,6 @@
     "changeset-publish": "npx changeset publish",
     "generate-doc": "zx ./scripts/generate-doc.js"
   },
-  "resolutions": {
-    "typescript": "^5.3.3"
-  },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@turbo/gen": "^1.12.4",
@@ -43,10 +40,11 @@
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "turbo": "^1.12.4",
-    "typedoc": "^0.25.9",
+    "typedoc": "^0.25.13",
     "typedoc-plugin-markdown": "^3.17.1",
     "typedoc-plugin-mdn-links": "^3.1.17",
     "typedoc-plugin-missing-exports": "^2.2.0",
+    "typescript": "5.4.3",
     "zod": "3.22.4",
     "zx": "^7.2.3"
   },

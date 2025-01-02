@@ -90,7 +90,7 @@ export function useScrollLock(
           0
 
         const scrollbarWidth = offsetWidth - target.current.scrollWidth
-        target.current.style.paddingRight = `${scrollbarWidth + currentPaddingRight}px`
+        target.current.style.paddingRight = `${(scrollbarWidth + currentPaddingRight).toFixed()}px`
       }
 
       // Lock the scroll

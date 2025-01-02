@@ -76,7 +76,9 @@ export function useDebounceCallback<T extends (...args: any) => ReturnType<T>>(
   delay = 500,
   options?: DebounceOptions,
 ): DebouncedState<T> {
-  const debouncedFunc = useRef<ReturnType<typeof debounce>>()
+  const debouncedFunc = useRef<ReturnType<typeof debounce> | undefined>(
+    undefined,
+  )
 
   useUnmount(() => {
     if (debouncedFunc.current) {

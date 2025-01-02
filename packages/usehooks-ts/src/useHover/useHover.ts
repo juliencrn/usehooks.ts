@@ -19,7 +19,7 @@ import { useEventListener } from '../useEventListener'
  * ```
  */
 export function useHover<T extends HTMLElement = HTMLElement>(
-  elementRef: RefObject<T>,
+  elementRef: RefObject<T | null>,
 ): boolean {
   const [value, setValue] = useState<boolean>(false)
 

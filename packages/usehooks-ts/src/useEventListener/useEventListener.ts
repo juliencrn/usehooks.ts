@@ -31,7 +31,7 @@ function useEventListener<
   handler:
     | ((event: HTMLElementEventMap[K]) => void)
     | ((event: SVGElementEventMap[K]) => void),
-  element: RefObject<T>,
+  element: RefObject<T | null>,
   options?: boolean | AddEventListenerOptions,
 ): void
 
@@ -88,7 +88,7 @@ function useEventListener<
       | MediaQueryListEventMap[KM]
       | Event,
   ) => void,
-  element?: RefObject<T>,
+  element?: RefObject<T | null>,
   options?: boolean | AddEventListenerOptions,
 ) {
   // Create a ref that stores handler

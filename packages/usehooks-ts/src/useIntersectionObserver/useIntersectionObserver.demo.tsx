@@ -28,7 +28,7 @@ export default function Component() {
   return (
     <>
       {Array.from({ length: 5 }).map((_, index) => (
-        <Section key={index + 1} title={`${index + 1}`} />
+        <Section key={index + 1} title={(index + 1).toFixed()} />
       ))}
     </>
   )

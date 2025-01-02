@@ -15,7 +15,7 @@ type Size = {
 /** The options for the ResizeObserver. */
 type UseResizeObserverOptions<T extends HTMLElement = HTMLElement> = {
   /** The ref of the element to observe. */
-  ref: RefObject<T>
+  ref: RefObject<T | null>
   /**
    * When using `onResize`, the hook doesn't re-render on element size changes; it delegates handling to the provided callback.
    * @default undefined

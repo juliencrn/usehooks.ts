@@ -8,7 +8,7 @@ export default function Component() {
       .then(() => {
         console.log('Copied!', { text })
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         console.error('Failed to copy!', error)
       })
   }

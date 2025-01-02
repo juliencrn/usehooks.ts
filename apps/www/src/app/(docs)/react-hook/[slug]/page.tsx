@@ -7,6 +7,8 @@ import { RightSidebar } from '@/components/docs/right-sidebar'
 import { siteConfig } from '@/config/site'
 import { getHook, getHookList } from '@/lib/api'
 
+type Params = Promise<{ slug: string }>
+
 export const generateStaticParams = async () => {
   const hooks = await getHookList()
   return hooks.map(hook => ({ slug: hook.slug }))
@@ -24,11 +26,14 @@ function getImageUrl(name: string) {
   return `https://via.placeholder.com/1200x630.png/007ACC/fff/?text=${name}`
 }
 
-export const generateMetadata = async (props: {
-  params: { slug: string }
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Params
 }): Promise<Metadata> => {
+  const { slug } = await params
   const hooks = await getHookList()
-  const hook = hooks.find(hook => hook.slug === props.params.slug)
+  const hook = hooks.find(hook => hook.slug === slug)
   if (!hook) {
     return {}
   }
@@ -63,13 +68,10 @@ export const generateMetadata = async (props: {
   }
 }
 
-export default async function HookPage({
-  params,
-}: {
-  params: { slug: string }
-}) {
+export default async function HookPage({ params }: { params: Params }) {
+  const { slug } = await params
   const [{ frontmatter, content }, hookList] = await Promise.all([
-    getHook(params.slug),
+    getHook(slug),
     getHookList(),
   ])
 

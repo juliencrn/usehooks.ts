@@ -30,7 +30,7 @@ type EventType =
  * ```
  */
 export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
-  ref: RefObject<T> | RefObject<T>[],
+  ref: RefObject<T | null> | RefObject<T | null>[],
   handler: (event: MouseEvent | TouchEvent | FocusEvent) => void,
   eventType: EventType = 'mousedown',
   eventListenerOptions: AddEventListenerOptions = {},
@@ -41,7 +41,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
       const target = event.target as Node
 
       // Do nothing if the target is not connected element with document
-      if (!target || !target.isConnected) {
+      if (!target?.isConnected) {
         return
       }
 
