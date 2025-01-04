@@ -26,7 +26,7 @@
     "date-fns": "^3.3.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.364.0",
-    "next": "14.1.4",
+    "next": "14.2.21",
     "next-mdx-remote": "^4.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
