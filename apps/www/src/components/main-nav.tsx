@@ -3,7 +3,7 @@
 import * as React from 'react'
 
 import Link from 'next/link'
-import { useSelectedLayoutSegment } from 'next/navigation'
+import { usePathname, useSelectedLayoutSegment } from 'next/navigation'
 
 import { MobileNav } from '@/components/mobile-nav'
 import { Close, Logo } from '@/components/ui/icons'
@@ -18,7 +18,14 @@ type MainNavProps = {
 
 export function MainNav({ items, children }: MainNavProps) {
   const segment = useSelectedLayoutSegment()
+  const pathname = usePathname()
+  const [prevPathname, setPrevPathname] = React.useState<string>(pathname)
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
+
+  if (pathname !== prevPathname) {
+    setShowMobileMenu(false)
+    setPrevPathname(pathname)
+  }
 
   return (
     <div className="flex gap-6 md:gap-10">
@@ -56,9 +63,7 @@ export function MainNav({ items, children }: MainNavProps) {
         {showMobileMenu ? <Close /> : <Logo />}
         <span className="font-bold">Menu</span>
       </button>
-      {showMobileMenu && items && (
-        <MobileNav items={items}>{children}</MobileNav>
-      )}
+      {showMobileMenu && <MobileNav>{children}</MobileNav>}
     </div>
   )
 }
