@@ -9,6 +9,7 @@ import type { BaseHook, SidebarNavItem } from '@/types'
 type DocsSidebarNavProps = {
   items: SidebarNavItem[]
   hooks: BaseHook[]
+  className?: string
 }
 
 export function LeftSidebar(props: DocsSidebarNavProps) {
@@ -23,7 +24,12 @@ export function LeftSidebar(props: DocsSidebarNavProps) {
   }
 
   return (
-    <aside className="fixed top-16 z-30 hidden h-[calc(100vh-4rem-1px)] w-full shrink-0 overflow-y-auto border-r py-6 pr-2 md:sticky md:block lg:py-10">
+    <aside
+      className={cn(
+        'top-16 z-30 h-[calc(100vh-4rem-1px)] w-full shrink-0 overflow-y-auto border-r py-6 pr-2 md:sticky lg:py-10',
+        props.className,
+      )}
+    >
       {items.map((item, index) => (
         <div key={index} className={'pb-8'}>
           <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-medium">
